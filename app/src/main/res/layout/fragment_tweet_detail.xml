@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/ivFragTweetImage"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ivFragClose"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivFragTweetImage"
+            android:layout_toEndOf="@+id/ivFragTweetImage"
+            android:layout_alignTop="@+id/ivFragTweetImage"
+            android:id="@+id/tvScreenName"
+            android:layout_marginBottom="3dp" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivFragTweetImage"
+            android:layout_toEndOf="@+id/ivFragTweetImage"
+            android:layout_below="@+id/tvScreenName"
+            android:id="@+id/tvHandle" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:srcCompat="@mipmap/ic_close"
+            android:id="@+id/ivFragClose"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <com.codepath.apps.simpletwitterclient.LinkifiedTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|left"
+        android:text="test"
+        android:autoLink="all"
+        android:linksClickable="true"
+        android:textSize="20dp"
+        android:id="@+id/etFragTweetText"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:id="@+id/tvTweetCreated" />
+
+</LinearLayout>

@@ -12,6 +12,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ import java.util.Locale;
  */
 //parse JSON and store data, encapsulate state logic or display logic
 @Table(database = TweetDatabase.class)
+@Parcel(analyze={Tweet.class})   // add Parceler annotation here
 public class Tweet extends BaseModel{
     //list of attributes
     @PrimaryKey
@@ -114,15 +116,15 @@ public class Tweet extends BaseModel{
         return user;
     }
 
-    public void setUid(long uid) {
+    void setUid(long uid) {
         this.uid = uid;
     }
 
-    public void setCreatedAt(String createdAt) {
+    void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public void setBody(String body) {
+    void setBody(String body) {
         this.body = body;
     }
 

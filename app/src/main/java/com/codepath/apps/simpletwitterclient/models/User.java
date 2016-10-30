@@ -7,11 +7,13 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
- * Created by phoen on 10/28/2016.
+ * Created on 10/28/2016.
  */
 @Table(database = TweetDatabase.class)
+@Parcel(analyze={User.class})   // add Parceler annotation here
 public class User extends BaseModel{
     //list attributes
     @Column

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="#2600ddff">
 
     <ImageView
         android:layout_width="60dp"
@@ -35,7 +36,7 @@
         android:layout_toEndOf="@+id/tvUserName"
         android:layout_marginRight="5dp" />
 
-    <TextView
+    <com.codepath.apps.simpletwitterclient.LinkifiedTextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

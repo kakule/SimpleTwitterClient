@@ -39,7 +39,7 @@ public class RecycleTweetsAdapter extends
         TextView tvUserName;
         TextView tvScreenName;
         TextView tvrelativeTime;
-        TextView tvBody;
+        LinkifiedTextView tvBody;
         private Context context;
 
         public ViewHolder(Context context, final View itemView) {
@@ -49,7 +49,7 @@ public class RecycleTweetsAdapter extends
             tvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
             tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
             tvrelativeTime = (TextView) itemView.findViewById(R.id.tvrelativeTime);
-            tvBody = (TextView) itemView.findViewById(R.id.tvBody);
+            tvBody = (LinkifiedTextView) itemView.findViewById(R.id.tvBody);
             this.context = context;
             // Setup the click listener
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +82,7 @@ public class RecycleTweetsAdapter extends
             return tvrelativeTime;
         }
 
-        public TextView getTvBody() {
+        public LinkifiedTextView getTvBody() {
             return tvBody;
         }
 
@@ -115,8 +115,7 @@ public class RecycleTweetsAdapter extends
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(context, tweetView);
-        return viewHolder;
+        return new ViewHolder(context, tweetView);
     }
 
     // Involves populating data into the item through holder
@@ -124,13 +123,12 @@ public class RecycleTweetsAdapter extends
     public void onBindViewHolder(RecycleTweetsAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
         Tweet tweet = mTweets.get(position);
-
         // Set item views based on your views and data model
         ImageView ivProfileImage = viewHolder.getIvProfileImage();
         TextView tvUserName = viewHolder.getTvUserName();
         TextView tvScreenName = viewHolder.getTvScreenName();
         TextView tvrelativeTime = viewHolder.getTvrelativeTime();
-        TextView tvBody = viewHolder.getTvBody();
+        LinkifiedTextView tvBody =  viewHolder.getTvBody();
 
         //populate the data into the subviews
         tvUserName.setText(tweet.getUser().getName());

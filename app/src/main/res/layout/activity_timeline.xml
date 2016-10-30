@@ -4,13 +4,15 @@
     android:id="@+id/activity_timeline"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.apps.simpletwitterclient.TimelineActivity">
+    tools:context="com.codepath.apps.simpletwitterclient.TimelineActivity"
+    android:background="@color/colorPrimaryDark">
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvTweets"

@@ -43,7 +43,8 @@ public class TimelineActivity extends AppCompatActivity implements
     private EndlessRecyclerViewScrollListener scrollListener;
     ActionBar actionBar;
     private SwipeRefreshLayout swipeContainer;
-
+    //decoration for recycleview
+    SpacesItemDecoration decoration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +80,8 @@ public class TimelineActivity extends AppCompatActivity implements
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         // Set layout manager to position the items
         rvTweets.setLayoutManager(linearLayoutManager);
+        decoration = new SpacesItemDecoration(4);
+        rvTweets.addItemDecoration(decoration);
         client = TwitterApplication.getRestClient(); //singleton client
         getUserDetails();
         tweets.addAll((ArrayList) Tweet.recentItems());
@@ -103,7 +106,10 @@ public class TimelineActivity extends AppCompatActivity implements
         aTweets.setOnItemClickListener(new RecycleTweetsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                FragmentManager fm = getSupportFragmentManager();
+                DetailedTweetFragment detailFrag =
+                        DetailedTweetFragment.newInstance(tweets.get(position));
+                detailFrag.show(fm, "detailfragment");
             }
         });
     }
@@ -187,7 +193,7 @@ public class TimelineActivity extends AppCompatActivity implements
         if (isNetworkAvailable() && isOnline()) {
             FragmentManager fm = getSupportFragmentManager();
             ComposeDialogFragment composeFrag = ComposeDialogFragment.newInstance(me.getProfileImageUrl());
-            composeFrag.show(fm, "fragment");
+            composeFrag.show(fm, "composefragment");
         } else {
             informNoInternet();
         }
