@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.adapters;
+package com.codepath.apps.simpletwitterclient;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

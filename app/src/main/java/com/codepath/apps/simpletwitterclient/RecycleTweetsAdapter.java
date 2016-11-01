@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.adapters;
+package com.codepath.apps.simpletwitterclient;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -13,7 +13,6 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.View.LinkifiedTextView;
-import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.activities;
+package com.codepath.apps.simpletwitterclient;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.TimelineActivity;
 import com.codepath.apps.simpletwitterclient.application.TwitterClient;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 

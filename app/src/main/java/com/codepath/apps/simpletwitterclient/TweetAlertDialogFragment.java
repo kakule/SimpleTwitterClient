@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.activities;
+package com.codepath.apps.simpletwitterclient;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.activities;
+package com.codepath.apps.simpletwitterclient;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.codepath.apps.simpletwitterclient.activities.ComposeDialogFragment;
+import com.codepath.apps.simpletwitterclient.activities.DetailedTweetFragment;
 import com.codepath.apps.simpletwitterclient.interfaces.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.RecycleTweetsAdapter;
@@ -38,7 +40,7 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity implements
-        ComposeDialogFragment.PostTweetDialogListener{
+        ComposeDialogFragment.PostTweetDialogListener {
     private User me;
     private TwitterClient client;
     private ArrayList<Tweet> tweets;

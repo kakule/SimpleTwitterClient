@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.adapters;/*
+package com.codepath.apps.simpletwitterclient;/*
    
 Decorator which adds spacing around the tiles in a Grid layout RecyclerView. Apply to a RecyclerView with: 
 

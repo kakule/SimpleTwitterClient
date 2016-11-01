@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.activities;
+package com.codepath.apps.simpletwitterclient;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.View.LinkifiedTextView;
-import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 
 import org.parceler.Parcels;
