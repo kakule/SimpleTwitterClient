@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 
 import java.util.List;
@@ -47,15 +48,10 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         tvrelativeTime.setText(tweet.getRelativeTimeAgo());
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent);//clear out the old image
-        //Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl())
-         //       .transform(new RoundedCornersTransformation(3, 3))
-         //       .into(ivProfileImage);
         Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 3, 3))
                 .into(ivProfileImage);
         //5. return the view to be inserted in the list
         return convertView;
     }
-
-    //Override and setup custom template
 }

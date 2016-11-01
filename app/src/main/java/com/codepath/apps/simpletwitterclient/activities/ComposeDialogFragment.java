@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.activities;
 
 import android.content.DialogInterface;
 import android.graphics.Point;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.models.Draft;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -116,8 +117,6 @@ public class ComposeDialogFragment extends DialogFragment
             if (currentLength > 0) {
                 mCharactersLeft.setText(Integer.toString(MAX_CHARACTERS - currentLength));
                 mTweetButton.setEnabled(true);
-                //mTweetButton.setBackgroundResource(R.drawable.item_border);
-                //mTweetButton.setBackgroundColor(Color.parseColor("#4099FF"));
             } else {
                 mTweetButton.setEnabled(false);
                 mCharactersLeft.setText(Integer.toString(MAX_CHARACTERS));

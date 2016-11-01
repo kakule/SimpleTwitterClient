@@ -71,7 +71,7 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         />
 
-    <com.codepath.apps.simpletwitterclient.LinkifiedTextView
+    <com.codepath.apps.simpletwitterclient.View.LinkifiedTextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

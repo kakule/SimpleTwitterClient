@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.activities;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.simpletwitterclient.View.LinkifiedTextView;
+import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 
 import org.parceler.Parcels;
@@ -68,9 +70,6 @@ public class DetailedTweetFragment extends DialogFragment {
         Tweet postedTweet = Parcels.unwrap(getArguments().getParcelable(TweetParcelKey));
         Toast.makeText(getActivity(), postedTweet.getBody(), Toast.LENGTH_SHORT).show();
         String img = postedTweet.getUser().getProfileImageUrl();
-        //Picasso.with(this.getActivity()).load(img)
-        //        .transform(new RoundedCornersTransformation(3, 3))
-        //        .into(mProfileImage);
         Glide.with(this.getActivity()).load(img)
                 .bitmapTransform(new RoundedCornersTransformation(this.getActivity(), 3, 3))
                 .into(mProfileImage);

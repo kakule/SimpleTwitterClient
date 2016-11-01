@@ -1,11 +1,11 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.application;
+
+import android.app.Application;
+import android.content.Context;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
-
-import android.app.Application;
-import android.content.Context;
 
 /*
  * This is the Android application itself and is used to configure various settings

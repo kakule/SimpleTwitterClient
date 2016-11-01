@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.application;
 
 import android.content.Context;
 
@@ -34,11 +34,6 @@ public class TwitterClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-	// METHOD == ENDPOINT
-    //Get home timeline for user
-    //GET statuses/home_timeline.json
-    //        count=25
-    //        since_id=1
     public void getHomeTimeline (long since_id,
                                  long max_id,
                                  AsyncHttpResponseHandler handler) {

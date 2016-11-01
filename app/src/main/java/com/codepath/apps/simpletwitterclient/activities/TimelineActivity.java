@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,15 +8,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.codepath.apps.simpletwitterclient.interfaces.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.adapters.RecycleTweetsAdapter;
+import com.codepath.apps.simpletwitterclient.adapters.SpacesItemDecoration;
+import com.codepath.apps.simpletwitterclient.application.TwitterApplication;
+import com.codepath.apps.simpletwitterclient.application.TwitterClient;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 import com.codepath.apps.simpletwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -36,13 +42,11 @@ public class TimelineActivity extends AppCompatActivity implements
     private User me;
     private TwitterClient client;
     private ArrayList<Tweet> tweets;
-    //private TweetsArrayAdapter aTweets;
     private RecycleTweetsAdapter aTweets;
-    //private ListView lvTweets;
     private RecyclerView rvTweets;
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener scrollListener;
-    ActionBar actionBar;
+    Toolbar toolBar;
     private SwipeRefreshLayout swipeContainer;
     //decoration for recycleview
     SpacesItemDecoration decoration;
@@ -61,9 +65,12 @@ public class TimelineActivity extends AppCompatActivity implements
     }
 
     void setUpViews() {
-        actionBar = getSupportActionBar(); // or getActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.actionbar_logo_center);
+        toolBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolBar);
+        // Display icon in the toolbar
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // Remove default title text
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(refreshSwipe);
@@ -72,7 +79,6 @@ public class TimelineActivity extends AppCompatActivity implements
         //create the arraylist (data source)
         tweets = new ArrayList<>();
         //construct the adapter from data source
-        //aTweets = new TweetsArrayAdapter(this, tweets);
         aTweets = new RecycleTweetsAdapter(this, tweets);
         //connect adapter to recycleview
         rvTweets.setAdapter(aTweets);
@@ -129,6 +135,8 @@ public class TimelineActivity extends AppCompatActivity implements
                 String titleOfPage = intent.getStringExtra(Intent.EXTRA_SUBJECT);
                 String urlOfPage = intent.getStringExtra(Intent.EXTRA_TEXT);
                 Uri imageUriOfPage = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+                //To do
             }
         }
     }
@@ -141,7 +149,7 @@ public class TimelineActivity extends AppCompatActivity implements
                 //SUCCESS
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    Log.d("DEBUG-success", response.toString());
+                    Log.d("DEBUG", response.toString());
                     if (since_id == 1) {
                         // Delete a whole table
                         Delete.table(Tweet.class);
@@ -158,12 +166,12 @@ public class TimelineActivity extends AppCompatActivity implements
                 //FAILURE
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    Log.d("DEBUG-error-array", errorResponse.toString());
+                    Log.d("DEBUG", errorResponse.toString());
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG-error-object", errorResponse.toString());
+                    Log.d("DEBUG", errorResponse.toString());
                 }
             });
         } else {

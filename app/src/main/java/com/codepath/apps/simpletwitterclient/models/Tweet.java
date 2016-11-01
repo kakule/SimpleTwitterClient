@@ -58,7 +58,6 @@ public class Tweet extends BaseModel{
             tweet.uid = jsonobject.getLong("id");
             tweet.createdAt = jsonobject.getString("created_at");
             tweet.user = User.fromJSON(jsonobject.getJSONObject("user"));
-            //tweet.media = TweetMedia.fromJSON(jsonobject.getJSONObject("entities"));
             tweet.media = TweetMedia.fromJSON(jsonobject);
             tweet.save();
         } catch (JSONException e) {

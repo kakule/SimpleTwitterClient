@@ -50,7 +50,7 @@
 
     </RelativeLayout>
 
-    <com.codepath.apps.simpletwitterclient.LinkifiedTextView
+    <com.codepath.apps.simpletwitterclient.View.LinkifiedTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top|left"

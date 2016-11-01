@@ -45,8 +45,6 @@ public class TweetMedia extends BaseModel {
                 if (m.tweetPic != null) {
                     break;
                 }
-                //save to db
-                //u.save();
             }
         } catch (JSONException e) {
             e.printStackTrace();
