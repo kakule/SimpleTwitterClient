@@ -9,7 +9,7 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -20,4 +20,6 @@
         <item name="android:minWidth">0dip</item>
         <item name="android:padding">0dip</item>
     </style>
+
+    <style name="MyButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless"></style>
 </resources>

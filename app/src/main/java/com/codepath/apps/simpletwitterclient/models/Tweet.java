@@ -30,14 +30,18 @@ public class Tweet extends BaseModel{
     //list of attributes
     @PrimaryKey
     @Column
-    private long uid; // unique id for tweet
+    long uid; // unique id for tweet
     @Column
-    private String createdAt;
+    String createdAt;
     @Column
-    private String body;
+    String body;
     @Column
     @ForeignKey(saveForeignKeyModel = false)
-    private User user; //store embedded user object
+    User user; //store embedded user object
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = false)
+    TweetMedia media;
 
     public Tweet() {
         super();
@@ -54,6 +58,8 @@ public class Tweet extends BaseModel{
             tweet.uid = jsonobject.getLong("id");
             tweet.createdAt = jsonobject.getString("created_at");
             tweet.user = User.fromJSON(jsonobject.getJSONObject("user"));
+            //tweet.media = TweetMedia.fromJSON(jsonobject.getJSONObject("entities"));
+            tweet.media = TweetMedia.fromJSON(jsonobject);
             tweet.save();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -116,6 +122,10 @@ public class Tweet extends BaseModel{
         return user;
     }
 
+    public TweetMedia getMedia() {
+        return media;
+    }
+
     void setUid(long uid) {
         this.uid = uid;
     }
@@ -130,6 +140,10 @@ public class Tweet extends BaseModel{
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setTweetMedia(TweetMedia media) {
+        this.media = media;
     }
 
     // Record Finders

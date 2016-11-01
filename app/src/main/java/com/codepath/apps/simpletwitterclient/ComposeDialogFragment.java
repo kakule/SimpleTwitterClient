@@ -1,8 +1,10 @@
 package com.codepath.apps.simpletwitterclient;
 
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Display;
@@ -17,15 +19,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.codepath.apps.simpletwitterclient.models.Draft;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
- * Created by phoen on 10/29/2016.
+ * Created on 10/29/2016.
  */
 
-public class ComposeDialogFragment extends DialogFragment {
+public class ComposeDialogFragment extends DialogFragment
+        implements TweetAlertDialogFragment.AlertDialogListener {
 
     public interface PostTweetDialogListener {
         void onFinishDialog(String inputText);
@@ -39,6 +43,7 @@ public class ComposeDialogFragment extends DialogFragment {
     private TextView mCharactersLeft;
     private Button mTweetButton;
     private ImageView mCloseImage;
+    Draft draft;
     public ComposeDialogFragment() {
 
     }
@@ -72,10 +77,16 @@ public class ComposeDialogFragment extends DialogFragment {
         mCloseImage = (ImageView) view.findViewById(R.id.ivFragClose);
         mCloseImage.setOnClickListener(closeListener);
         String img = getArguments().getString(profileImageKey);
-        Picasso.with(this.getActivity()).load(getArguments().getString(profileImageKey))
-                .transform(new RoundedCornersTransformation(3, 3))
+        Glide.with(this.getActivity()).load(getArguments().getString(profileImageKey))
+                .bitmapTransform(new RoundedCornersTransformation(this.getActivity(), 3, 3))
                 .into(mProfileImage);
         mCharactersLeft.setText(Integer.toString(MAX_CHARACTERS));
+        if (Draft.recentItems() != null) {
+            draft = Draft.recentItems();
+            mComposeText.setText(draft.getDraft());
+            mComposeText.setSelection(draft.getDraft().length());
+            draft.delete();
+        }
     }
 
     public void onResume() {
@@ -135,4 +146,27 @@ public class ComposeDialogFragment extends DialogFragment {
             dismiss();
         }
     };
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+
+        if (!mComposeText.getText().toString().trim().isEmpty()) {
+            FragmentManager fm = getFragmentManager();
+            TweetAlertDialogFragment alertDialogFragment =
+                    TweetAlertDialogFragment.newInstance("You are exiting an unfinished tweet!!");
+            // SETS the target fragment for use later when sending results
+            alertDialogFragment.setTargetFragment(ComposeDialogFragment.this, 300);
+            alertDialogFragment.show(fm, "fragment_alert");
+            }
+    }
+
+    // This is called when the dialog is completed and the results have been passed
+    @Override
+    public void onFinishAlertDialog(boolean choice) {
+        if (choice) {
+            draft = new Draft(mComposeText.getText().toString().trim());
+            draft.save();
+        }
+
+    }
 }

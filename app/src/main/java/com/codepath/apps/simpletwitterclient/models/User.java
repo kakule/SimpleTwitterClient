@@ -17,14 +17,14 @@ import org.parceler.Parcel;
 public class User extends BaseModel{
     //list attributes
     @Column
-    private String name;
+    String name;
     @PrimaryKey
     @Column
-    private long uid;
+    long uid;
     @Column
-    private String screenName;
+    String screenName;
     @Column
-    private String profileImageUrl;
+    String profileImageUrl;
 
     public User() {
         super();

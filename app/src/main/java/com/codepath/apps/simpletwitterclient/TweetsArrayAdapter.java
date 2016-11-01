@@ -9,12 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by phoen on 10/28/2016.
@@ -47,8 +47,11 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         tvrelativeTime.setText(tweet.getRelativeTimeAgo());
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent);//clear out the old image
-        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl())
-                .transform(new RoundedCornersTransformation(3, 3))
+        //Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl())
+         //       .transform(new RoundedCornersTransformation(3, 3))
+         //       .into(ivProfileImage);
+        Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl())
+                .bitmapTransform(new RoundedCornersTransformation(getContext(), 3, 3))
                 .into(ivProfileImage);
         //5. return the view to be inserted in the list
         return convertView;

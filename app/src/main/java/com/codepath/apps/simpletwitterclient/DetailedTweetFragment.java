@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
-import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -23,7 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created on 10/30/2016.
@@ -68,8 +68,11 @@ public class DetailedTweetFragment extends DialogFragment {
         Tweet postedTweet = Parcels.unwrap(getArguments().getParcelable(TweetParcelKey));
         Toast.makeText(getActivity(), postedTweet.getBody(), Toast.LENGTH_SHORT).show();
         String img = postedTweet.getUser().getProfileImageUrl();
-        Picasso.with(this.getActivity()).load(img)
-                .transform(new RoundedCornersTransformation(3, 3))
+        //Picasso.with(this.getActivity()).load(img)
+        //        .transform(new RoundedCornersTransformation(3, 3))
+        //        .into(mProfileImage);
+        Glide.with(this.getActivity()).load(img)
+                .bitmapTransform(new RoundedCornersTransformation(this.getActivity(), 3, 3))
                 .into(mProfileImage);
         mTweetText.setText(postedTweet.getBody());
         mScreenName.setText(postedTweet.getUser().getName());

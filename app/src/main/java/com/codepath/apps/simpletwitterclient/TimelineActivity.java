@@ -1,8 +1,10 @@
 package com.codepath.apps.simpletwitterclient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -61,9 +62,8 @@ public class TimelineActivity extends AppCompatActivity implements
 
     void setUpViews() {
         actionBar = getSupportActionBar(); // or getActionBar();
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setLogo(R.drawable.twitter_128);
-        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.actionbar_logo_center);
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(refreshSwipe);
@@ -112,9 +112,28 @@ public class TimelineActivity extends AppCompatActivity implements
                 detailFrag.show(fm, "detailfragment");
             }
         });
+        //check if intent was received
+        getImplicitIntent();
+    }
+
+    public void getImplicitIntent () {
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+
+                // Make sure to check whether returned data will be null.
+                String titleOfPage = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+                String urlOfPage = intent.getStringExtra(Intent.EXTRA_TEXT);
+                Uri imageUriOfPage = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            }
+        }
     }
     //Send an API request to get the timeline json
-    //Fill the listview by creating the tweet object from the json
+    //Fill the view by creating the tweet object from the json
     private boolean populateTimeline(final long since_id, long max_id) {
         boolean status = true;
         if (isNetworkAvailable() && isOnline()) {
@@ -189,7 +208,7 @@ public class TimelineActivity extends AppCompatActivity implements
         }
     }
 
-    public void onComposeAction (MenuItem mi) {
+    public void onComposeAction (View v) {
         if (isNetworkAvailable() && isOnline()) {
             FragmentManager fm = getSupportFragmentManager();
             ComposeDialogFragment composeFrag = ComposeDialogFragment.newInstance(me.getProfileImageUrl());
@@ -233,6 +252,7 @@ public class TimelineActivity extends AppCompatActivity implements
                 populateTimeline(1, 0);
             } else {
                 informNoInternet();
+                swipeContainer.setRefreshing(false);
             }
         }
     };

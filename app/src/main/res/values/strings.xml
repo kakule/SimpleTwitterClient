@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">SimpleTwitterClient</string>
-    <string name="login_label">Connect</string>
+    <string name="login_label">Sign In</string>
     <string name="title_activity_timeline">Home Timeline</string>
     <string name="compose_hint">What\'s happening?</string>
 

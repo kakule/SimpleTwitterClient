@@ -15,37 +15,18 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginRight="5dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/tvScreenName"
-        android:layout_toEndOf="@+id/tvScreenName"
-        android:id="@+id/tvrelativeTime" />
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvScreenName"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/tvUserName"
-        android:layout_toEndOf="@+id/tvUserName"
-        android:layout_marginRight="5dp" />
-
-    <com.codepath.apps.simpletwitterclient.LinkifiedTextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvBody"
-        android:autoLink="all"
-        android:linksClickable="true"
         android:layout_below="@+id/tvUserName"
-        android:layout_alignLeft="@+id/tvUserName"
-        android:layout_alignStart="@+id/tvUserName" />
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:layout_marginRight="5dp" />
 
     <TextView
         android:text="TextView"
@@ -56,4 +37,51 @@
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_marginRight="5dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvrelativeTime"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/flImage"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginBottom="5dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_launcher"
+            android:id="@+id/ivTweetPic"
+            android:layout_marginBottom="5dp" />
+    </FrameLayout>
+
+    <VideoView
+        android:id="@+id/video_view"
+        android:layout_width="320px"
+        android:layout_height="240px"
+        android:layout_below="@+id/tvBody"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        />
+
+    <com.codepath.apps.simpletwitterclient.LinkifiedTextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvBody"
+        android:autoLink="all"
+        android:linksClickable="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ivProfileImage"
+        android:layout_marginBottom="15dp" />
 </RelativeLayout>

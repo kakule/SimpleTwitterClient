@@ -1,24 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_timeline"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.codepath.apps.simpletwitterclient.TimelineActivity"
-    android:background="@color/colorPrimaryDark">
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeContainer"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_timeline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:context="com.codepath.apps.simpletwitterclient.TimelineActivity"
         android:background="@color/colorPrimaryDark">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvTweets"
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorPrimaryDark">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-</RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvTweets"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        app:layout_behavior="com.codepath.apps.simpletwitterclient.ScrollAwareFABBehavior"
+        android:src="@drawable/tweet_pen"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:onClick="onComposeAction"
+        app:layout_anchor="@id/activity_timeline"
+        app:layout_anchorGravity="bottom|right|end"
+        />
+
+
+</android.support.design.widget.CoordinatorLayout>

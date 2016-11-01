@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created on 10/28/2016.
@@ -40,6 +42,8 @@ public class RecycleTweetsAdapter extends
         TextView tvScreenName;
         TextView tvrelativeTime;
         LinkifiedTextView tvBody;
+        ImageView ivtweetPic;
+        VideoView video_player_view;
         private Context context;
 
         public ViewHolder(Context context, final View itemView) {
@@ -50,6 +54,8 @@ public class RecycleTweetsAdapter extends
             tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
             tvrelativeTime = (TextView) itemView.findViewById(R.id.tvrelativeTime);
             tvBody = (LinkifiedTextView) itemView.findViewById(R.id.tvBody);
+            ivtweetPic = (ImageView) itemView.findViewById(R.id.ivTweetPic);
+            video_player_view = (VideoView) itemView.findViewById(R.id.video_view);
             this.context = context;
             // Setup the click listener
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +90,14 @@ public class RecycleTweetsAdapter extends
 
         public LinkifiedTextView getTvBody() {
             return tvBody;
+        }
+
+        public ImageView getIvtweetPic() {
+            return ivtweetPic;
+        }
+
+        public VideoView getVideo_player_view() {
+            return video_player_view;
         }
 
         public Context getContext() {
@@ -129,6 +143,8 @@ public class RecycleTweetsAdapter extends
         TextView tvScreenName = viewHolder.getTvScreenName();
         TextView tvrelativeTime = viewHolder.getTvrelativeTime();
         LinkifiedTextView tvBody =  viewHolder.getTvBody();
+        ImageView ivtweetPic = viewHolder.getIvtweetPic();
+        final VideoView vid_view = viewHolder.getVideo_player_view();
 
         //populate the data into the subviews
         tvUserName.setText(tweet.getUser().getName());
@@ -137,9 +153,29 @@ public class RecycleTweetsAdapter extends
         tvrelativeTime.setText(tweet.getRelativeTimeAgo());
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent);//clear out the old image
-        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl())
-                .transform(new RoundedCornersTransformation(3, 3))
+        ivtweetPic.setImageResource(android.R.color.transparent);//clear out the old image
+
+        Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl())
+                .bitmapTransform(new RoundedCornersTransformation(getContext(), 3, 3))
                 .into(ivProfileImage);
+        if (tweet.getMedia() != null && tweet.getMedia().getTweetPic() != null) {
+            Glide.with(getContext()).load(tweet.getMedia().getTweetPic())
+                    .bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 10))
+                    .into(ivtweetPic);
+        }
+
+        if (tweet.getMedia() != null && tweet.getMedia().getTweetvid() != null) {
+            vid_view.setVisibility(View.VISIBLE);
+            vid_view.setVideoPath(tweet.getMedia().getTweetvid());
+            MediaController media_Controller = new MediaController(getContext());
+            media_Controller.setAnchorView(vid_view);
+            vid_view.setMediaController(media_Controller);
+            vid_view.requestFocus();
+            vid_view.start();
+        } else {
+            // Hide the controller
+            vid_view.setVisibility(View.GONE);
+        }
     }
 
     // Returns the total count of items in the list
