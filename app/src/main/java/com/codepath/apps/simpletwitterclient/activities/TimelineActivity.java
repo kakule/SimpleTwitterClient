@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +17,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
-import com.codepath.apps.simpletwitterclient.activities.ComposeDialogFragment;
-import com.codepath.apps.simpletwitterclient.activities.DetailedTweetFragment;
 import com.codepath.apps.simpletwitterclient.interfaces.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.RecycleTweetsAdapter;

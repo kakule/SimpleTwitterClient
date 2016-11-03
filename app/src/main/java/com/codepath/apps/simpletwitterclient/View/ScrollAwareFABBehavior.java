@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.View;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;

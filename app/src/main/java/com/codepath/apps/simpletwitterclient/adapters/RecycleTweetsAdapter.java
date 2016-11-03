@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient;
+package com.codepath.apps.simpletwitterclient.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.View.LinkifiedTextView;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 
@@ -160,9 +161,12 @@ public class RecycleTweetsAdapter extends
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 3, 3))
                 .into(ivProfileImage);
         if (tweet.getMedia() != null && tweet.getMedia().getTweetPic() != null) {
+            ivtweetPic.setVisibility(View.VISIBLE);
             Glide.with(getContext()).load(tweet.getMedia().getTweetPic())
                     .bitmapTransform(new RoundedCornersTransformation(getContext(), 10, 10))
                     .into(ivtweetPic);
+        } else {
+            ivtweetPic.setVisibility(View.GONE);
         }
 
         if (tweet.getMedia() != null && tweet.getMedia().getTweetvid() != null) {
