@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.simpletwitterclient.R;
-import com.codepath.apps.simpletwitterclient.application.TwitterClient;
+import com.codepath.apps.simpletwitterclient.clients.TwitterClient;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 //User signs in here

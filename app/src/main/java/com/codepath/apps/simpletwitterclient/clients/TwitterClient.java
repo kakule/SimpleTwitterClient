@@ -1,6 +1,9 @@
 package com.codepath.apps.simpletwitterclient.clients;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -8,6 +11,8 @@ import com.loopj.android.http.RequestParams;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
+
+import java.io.IOException;
 
 /*
  * 
@@ -50,6 +55,34 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiUrl, params, handler);
     }
 
+    public void getMentionsTimeline(long since_id,
+                                    long max_id,
+                                    AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", NUM_TWEETS_LOADED);
+        //Execute the request
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getUsersTimeline(long since_id,
+                                 long max_id,
+                                 String screenName,
+                                 AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+        params.put("count", NUM_TWEETS_LOADED);
+        if (max_id != 0) {
+            params.put("max_id", max_id - 1);
+        }
+        if (since_id != 0) {
+            params.put("since_id", since_id);
+        }
+        //Execute the request
+        getClient().get(apiUrl, params, handler);
+    }
+
     public void getAuthorisedUser(AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("account/verify_credentials.json");
 
@@ -63,6 +96,40 @@ public class TwitterClient extends OAuthBaseClient {
 
         //Execute the request
         getClient().post(apiUrl, params, handler);
+    }
+
+
+    //Internet related checks
+    public boolean isInternetAvailable() {
+
+        if (isNetworkAvailable() && isOnline()) {
+            return true;
+        }
+        return informNoInternet();
+    }
+
+
+    private boolean informNoInternet () {
+        Toast.makeText(context, "No Internet Connection Available", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+        return false;
     }
     //COMPOSE TWEET
 

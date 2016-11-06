@@ -27,16 +27,21 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class RecycleTweetsAdapter extends
         RecyclerView.Adapter<RecycleTweetsAdapter.ViewHolder> {
 
+    public static int DETAIL_VIEW = 0;
+    public static int PROFILE_VIEW = 1;
+
     // Define listener member variable
     private OnItemClickListener listener;
     // Define the listener interface
     public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
+        void onItemClick(View itemView, int position, int id);
     }
+
     // Define the method that allows the parent activity or fragment to define the listener
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProfileImage;
@@ -59,7 +64,8 @@ public class RecycleTweetsAdapter extends
             ivtweetPic = (ImageView) itemView.findViewById(R.id.ivTweetPic);
             video_player_view = (VideoView) itemView.findViewById(R.id.video_view);
             this.context = context;
-            // Setup the click listener
+
+            // Setup the click listener for detail view
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -67,11 +73,26 @@ public class RecycleTweetsAdapter extends
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(itemView, position);
+                            listener.onItemClick(itemView, position, DETAIL_VIEW);
                         }
                     }
                 }
             });
+
+            //Setup the click listener for profile pic
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, PROFILE_VIEW);
+                        }
+                    }
+                }
+            });
+
         }
 
         public ImageView getIvProfileImage() {

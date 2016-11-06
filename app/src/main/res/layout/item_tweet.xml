@@ -42,8 +42,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvrelativeTime"
-        android:layout_toRightOf="@+id/tvScreenName"
-        android:layout_toEndOf="@+id/tvScreenName" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="wrap_content"
