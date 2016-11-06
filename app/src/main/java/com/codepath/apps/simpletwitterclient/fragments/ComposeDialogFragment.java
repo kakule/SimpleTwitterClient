@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.activities;
+package com.codepath.apps.simpletwitterclient.fragments;
 
 import android.content.DialogInterface;
 import android.graphics.Point;
@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.activities.TweetAlertDialogFragment;
 import com.codepath.apps.simpletwitterclient.models.Draft;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
