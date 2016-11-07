@@ -45,26 +45,36 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        app:srcCompat="@drawable/ic_launcher"
-        android:id="@+id/ivTweetPic"
-        android:layout_marginBottom="5dp"
-        android:layout_toRightOf="@+id/ivProfileImage"
-        android:layout_toEndOf="@+id/ivProfileImage"
-        android:layout_below="@+id/tvBody"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
 
-    <VideoView
-        android:id="@+id/video_view"
-        android:layout_width="320px"
-        android:layout_height="240px"
-        android:layout_below="@+id/tvBody"
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rlmediaContainer"
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage"
-        />
+        android:layout_below="@+id/tvBody"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/ic_launcher"
+            android:id="@+id/ivTweetPic"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"/>
+
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="320px"
+            android:layout_height="240px"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            />
+
+    </RelativeLayout>
 
     <com.codepath.apps.simpletwitterclient.View.LinkifiedTextView
         android:text="TextView"
@@ -72,6 +82,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tvBody"
         android:autoLink="all"
+        android:minHeight="45dp"
         android:linksClickable="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -79,4 +90,52 @@
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_below="@+id/tvScreenName" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlmediaContainer"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/tvBody"
+        android:layout_alignStart="@+id/tvBody">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_reply"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/ivReply"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_favorite"
+            android:id="@+id/ivFavorite"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_retweet"
+                android:id="@+id/ivRetweet"
+                android:layout_weight="1"
+                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40"
+                android:textColor="@color/retweetNo"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tvretweetNumber"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

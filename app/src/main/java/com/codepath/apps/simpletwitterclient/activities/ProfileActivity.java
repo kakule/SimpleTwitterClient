@@ -7,13 +7,15 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.fragments.TweetListFragment;
 import com.codepath.apps.simpletwitterclient.fragments.UserHeaderFragment;
 import com.codepath.apps.simpletwitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.simpletwitterclient.models.User;
 
 import org.parceler.Parcels;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements
+        TweetListFragment.TimelineListener{
 
     Toolbar toolBar;
     TextView tvUserScreenName;
@@ -47,5 +49,12 @@ public class ProfileActivity extends AppCompatActivity {
             ft.replace(R.id.flUserHeader, fragmentUserHeader);
             ft.commit();
         }
+    }
+
+    //Listener for Hometimeline Fragment
+    @Override
+    public void onTweetClick(User user, int type) {
+
+        // Do nothing for now
     }
 }

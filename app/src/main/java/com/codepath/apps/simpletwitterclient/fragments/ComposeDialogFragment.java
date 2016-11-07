@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Display;
 import android.view.Gravity;
@@ -38,6 +39,7 @@ public class ComposeDialogFragment extends DialogFragment
 
 
     public static String profileImageKey = "profilekey";
+    public static String replyScreenameKey = "screename";
     private final int MAX_CHARACTERS = 140;
     private ImageView mProfileImage;
     private EditText mComposeText;
@@ -49,10 +51,12 @@ public class ComposeDialogFragment extends DialogFragment
 
     }
 
-    public static ComposeDialogFragment newInstance(String img) {
+    public static ComposeDialogFragment newInstance(String img,
+                                                    String screename) {
         ComposeDialogFragment frag = new ComposeDialogFragment();
         Bundle args = new Bundle();
         args.putString(profileImageKey, img);
+        args.putString(replyScreenameKey, screename);
         frag.setArguments(args);
         return frag;
     }
@@ -82,11 +86,15 @@ public class ComposeDialogFragment extends DialogFragment
                 .bitmapTransform(new RoundedCornersTransformation(this.getActivity(), 3, 3))
                 .into(mProfileImage);
         mCharactersLeft.setText(Integer.toString(MAX_CHARACTERS));
+        String replyScreenName = getArguments().getString(replyScreenameKey);
         if (Draft.recentItems() != null) {
             draft = Draft.recentItems();
             mComposeText.setText(draft.getDraft());
             mComposeText.setSelection(draft.getDraft().length());
             draft.delete();
+        } else if (!TextUtils.isEmpty(replyScreenName)) {
+            mComposeText.setText("@" + replyScreenName);
+            mComposeText.setSelection(replyScreenName.length() + 1);
         }
     }
 

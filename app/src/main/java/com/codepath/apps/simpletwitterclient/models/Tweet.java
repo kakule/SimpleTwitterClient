@@ -34,11 +34,19 @@ public class Tweet extends BaseModel{
     @Column
     String createdAt;
     @Column
+    int retweetCount;
+    //@Column
+    //int favoritesCount;
+    @Column
+    boolean favourited;
+
+    @Column
+    boolean retweeted;
+    @Column
     String body;
     @Column
     @ForeignKey(saveForeignKeyModel = false)
     User user; //store embedded user object
-
     @Column
     @ForeignKey(saveForeignKeyModel = false)
     TweetMedia media;
@@ -57,7 +65,12 @@ public class Tweet extends BaseModel{
             tweet.body = jsonobject.getString("text");
             tweet.uid = jsonobject.getLong("id");
             tweet.createdAt = jsonobject.getString("created_at");
+            tweet.retweetCount = jsonobject.getInt("retweet_count");
+            //tweet.favoritesCount = jsonobject.getInt("favourites_count");
+            tweet.retweeted = jsonobject.getBoolean("retweeted");
+            tweet.favourited = jsonobject.getBoolean("favorited");
             tweet.user = User.fromJSON(jsonobject.getJSONObject("user"));
+
             tweet.media = TweetMedia.fromJSON(jsonobject);
             tweet.save();
         } catch (JSONException e) {
@@ -125,6 +138,37 @@ public class Tweet extends BaseModel{
         return media;
     }
 
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+    public boolean isFavourited() {
+        return favourited;
+    }
+
+    public void setFavourited(boolean favourited) {
+        this.favourited = favourited;
+    }
+
+    public boolean isRetweeted() {
+        return retweeted;
+    }
+
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
+    //public int getFavoritesCount() {
+    //    return favoritesCount;
+    //}
+
+    void setRetweetCount(int retweetCount) {
+        this.retweetCount = retweetCount;
+    }
+
+    //void setFavoritesCount(int favoritesCount) {
+    //    this.favoritesCount = favoritesCount;
+    //}
     void setUid(long uid) {
         this.uid = uid;
     }

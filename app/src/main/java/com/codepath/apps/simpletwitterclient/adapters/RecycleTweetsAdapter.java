@@ -27,8 +27,11 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class RecycleTweetsAdapter extends
         RecyclerView.Adapter<RecycleTweetsAdapter.ViewHolder> {
 
-    public static int DETAIL_VIEW = 0;
-    public static int PROFILE_VIEW = 1;
+    public static int DETAIL_VIEW   = 0;
+    public static int PROFILE_VIEW  = 1;
+    public static int REPLY_VIEW    = 2;
+    public static int FAVORITE_VIEW = 3;
+    public static int RETWEET_VIEW  = 4;
 
     // Define listener member variable
     private OnItemClickListener listener;
@@ -51,6 +54,11 @@ public class RecycleTweetsAdapter extends
         LinkifiedTextView tvBody;
         ImageView ivtweetPic;
         VideoView video_player_view;
+        ImageView ivReply;
+        ImageView ivFavorite;
+        ImageView ivRetweet;
+
+        TextView tvRetweetNumber;
         private Context context;
 
         public ViewHolder(Context context, final View itemView) {
@@ -63,6 +71,10 @@ public class RecycleTweetsAdapter extends
             tvBody = (LinkifiedTextView) itemView.findViewById(R.id.tvBody);
             ivtweetPic = (ImageView) itemView.findViewById(R.id.ivTweetPic);
             video_player_view = (VideoView) itemView.findViewById(R.id.video_view);
+            ivReply = (ImageView) itemView.findViewById(R.id.ivReply);
+            ivFavorite = (ImageView) itemView.findViewById(R.id.ivFavorite);
+            ivRetweet = (ImageView) itemView.findViewById(R.id.ivRetweet);
+            tvRetweetNumber = (TextView) itemView.findViewById(R.id.tvretweetNumber);
             this.context = context;
 
             // Setup the click listener for detail view
@@ -93,6 +105,48 @@ public class RecycleTweetsAdapter extends
                 }
             });
 
+            //Setup the click listener for reply button
+            ivReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, REPLY_VIEW);
+                        }
+                    }
+                }
+            });
+
+            //Setup the click listener for reply button
+            ivFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, FAVORITE_VIEW);
+                        }
+                    }
+                }
+            });
+
+            //Setup the click listener for reply button
+            ivRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, RETWEET_VIEW);
+                        }
+                    }
+                }
+            });
+
         }
 
         public ImageView getIvProfileImage() {
@@ -117,6 +171,17 @@ public class RecycleTweetsAdapter extends
 
         public ImageView getIvtweetPic() {
             return ivtweetPic;
+        }
+
+        public ImageView getIvFavorite() {
+            return ivFavorite;
+        }
+        public TextView getTvRetweetNumber() {
+            return tvRetweetNumber;
+        }
+
+        public ImageView getIvRetweet() {
+            return ivRetweet;
         }
 
         public VideoView getVideo_player_view() {
@@ -167,6 +232,9 @@ public class RecycleTweetsAdapter extends
         TextView tvrelativeTime = viewHolder.getTvrelativeTime();
         LinkifiedTextView tvBody =  viewHolder.getTvBody();
         ImageView ivtweetPic = viewHolder.getIvtweetPic();
+        ImageView ivfavorite = viewHolder.getIvFavorite();
+        ImageView ivretweet = viewHolder.getIvRetweet();
+        TextView tvretweetNumber = viewHolder.getTvRetweetNumber();
         final VideoView vid_view = viewHolder.getVideo_player_view();
 
         //populate the data into the subviews
@@ -177,7 +245,9 @@ public class RecycleTweetsAdapter extends
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent);//clear out the old image
         ivtweetPic.setImageResource(android.R.color.transparent);//clear out the old image
-
+        ivfavorite.setImageResource(android.R.color.transparent);//clear out the old image
+        ivretweet.setImageResource(android.R.color.transparent);//clear out the old image
+        tvretweetNumber.setText(""); //reset
         Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 3, 3))
                 .into(ivProfileImage);
@@ -201,6 +271,26 @@ public class RecycleTweetsAdapter extends
         } else {
             // Hide the controller
             vid_view.setVisibility(View.GONE);
+        }
+
+        if (tweet.isFavourited()) {
+            ivfavorite.setImageResource(R.drawable.ic_favorite_yes);
+        } else {
+            ivfavorite.setImageResource(R.drawable.ic_favorite);
+        }
+
+        if (tweet.isRetweeted()) {
+            ivretweet.setImageResource(R.drawable.ic_retweet_yes);
+            tvretweetNumber.setTextColor(getContext()
+                    .getResources().getColor(R.color.retweetYes));
+        } else {
+            ivretweet.setImageResource(R.drawable.ic_retweet);
+            tvretweetNumber.setTextColor(getContext()
+                    .getResources().getColor(R.color.retweetNo));
+        }
+
+        if (tweet.getRetweetCount() > 0) {
+            tvretweetNumber.setText(Integer.toString(tweet.getRetweetCount()));
         }
     }
 

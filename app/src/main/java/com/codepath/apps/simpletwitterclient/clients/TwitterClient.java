@@ -33,7 +33,7 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_SECRET = "lF8iOJrxomHHy5C38QbhrPraJ62epaiZwsiJ4dmS5w70v38aWe"; // Change this
 	public static final String REST_CALLBACK_URL = "oauth://cpsimpletwitterclient"; // Change this (here and in manifest)
 
-    public static final int NUM_TWEETS_LOADED = 25;
+    public static final int REQUEST_NUM_TWEETS = 25;
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -44,7 +44,7 @@ public class TwitterClient extends OAuthBaseClient {
                                  AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", NUM_TWEETS_LOADED);
+        params.put("count", REQUEST_NUM_TWEETS);
         if (max_id != 0) {
             params.put("max_id", max_id - 1);
         }
@@ -60,7 +60,7 @@ public class TwitterClient extends OAuthBaseClient {
                                     AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/mentions_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", NUM_TWEETS_LOADED);
+        params.put("count", REQUEST_NUM_TWEETS);
         //Execute the request
         getClient().get(apiUrl, params, handler);
     }
@@ -72,7 +72,7 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("statuses/user_timeline.json");
         RequestParams params = new RequestParams();
         params.put("screen_name", screenName);
-        params.put("count", NUM_TWEETS_LOADED);
+        params.put("count", REQUEST_NUM_TWEETS);
         if (max_id != 0) {
             params.put("max_id", max_id - 1);
         }
@@ -89,6 +89,21 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiUrl, handler);
     }
 
+
+    public void postStatusFavorite (boolean status, long Id, AsyncHttpResponseHandler handler) {
+        String apiUrl;
+        if (status) {
+            apiUrl = getApiUrl("favorites/create.json");
+        } else {
+            apiUrl = getApiUrl("favorites/destroy.json");
+        }
+
+        RequestParams params = new RequestParams();
+        params.put("id", Id);
+
+        //Execute the request
+        getClient().post(apiUrl, params, handler);
+    }
     public void postTweet(String status, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/update.json");
         RequestParams params = new RequestParams();
@@ -98,6 +113,14 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().post(apiUrl, params, handler);
     }
 
+    public void postRetweet (long Id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/retweet/" + Long.toString(Id) + ".json");
+        RequestParams params = new RequestParams();
+        params.put("trim_user", 1);
+
+        //Execute the request
+        getClient().post(apiUrl, params, handler);
+    }
 
     //Internet related checks
     public boolean isInternetAvailable() {

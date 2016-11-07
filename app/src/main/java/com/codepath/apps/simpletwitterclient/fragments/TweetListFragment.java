@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.RecycleTweetsAdapter;
@@ -48,7 +47,7 @@ public class TweetListFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         // Set layout manager to position the items
         rvTweets.setLayoutManager(linearLayoutManager);
-        decoration = new SpacesItemDecoration(5);
+        decoration = new SpacesItemDecoration(10);
         rvTweets.addItemDecoration(decoration);
         //connect adapter to recycleview
         rvTweets.setAdapter(aTweets);
@@ -80,10 +79,19 @@ public class TweetListFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position, int type) {
                 if(type == RecycleTweetsAdapter.PROFILE_VIEW) {
-                    Toast.makeText(getActivity(), "Image clicked", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Image clicked", Toast.LENGTH_SHORT).show();
                     sendRequestToActivity (tweets.get(position).getUser(), type);
+                } else if (type == RecycleTweetsAdapter.REPLY_VIEW) {
+                    //Toast.makeText(getActivity(), "Reply Image clicked", Toast.LENGTH_SHORT).show();
+                    sendRequestToActivity(tweets.get(position).getUser(), type);
+                }  else if (type == RecycleTweetsAdapter.FAVORITE_VIEW) {
+                    //Toast.makeText(getActivity(), "Favorite Image clicked", Toast.LENGTH_SHORT).show();
+                    postTweetFavorite(tweets.get(position), position);
+                } else if (type == RecycleTweetsAdapter.RETWEET_VIEW) {
+                    //Toast.makeText(getActivity(), "Retweet Image clicked", Toast.LENGTH_SHORT).show();
+                    postRetweet(tweets.get(position).getUid());
                 } else {
-                    Toast.makeText(getActivity(), "Non Image clicked", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Non Image clicked", Toast.LENGTH_SHORT).show();
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     DetailedTweetFragment detailFrag =
                             DetailedTweetFragment.newInstance(tweets.get(position));
@@ -98,6 +106,7 @@ public class TweetListFragment extends Fragment {
         public void onRefresh() {
             //refresh the view
             refreshView();
+            scrollListener.resetState();
         }
     };
 
@@ -121,12 +130,23 @@ public class TweetListFragment extends Fragment {
     public void postTweet(String tweetStr) {
         //Implement in child
     }
+
+    public void postTweetFavorite(Tweet tweet, final int position) {
+        //Implement in child
+    }
+
+    public void postRetweet (Long Id) {
+        //we just reload timeline after retweet so we need to reset swipe state
+        scrollListener.resetState();
+        //Implement in child
+    }
+
     public boolean loadNextDataFromApi(int offset) {
         return true;
     }
 
     public void sendRequestToActivity (User user, int type) {
-        // Pass click request to activity
+        //Pass click request to activity
         TimelineListener listener = (TimelineListener) getActivity();
         listener.onTweetClick(user, type);
     }

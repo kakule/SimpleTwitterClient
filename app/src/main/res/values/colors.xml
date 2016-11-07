@@ -3,4 +3,6 @@
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#929296</color>
     <color name="colorAccent">#cf915a</color>
+    <color name="retweetYes">#54E5B2</color>
+    <color name="retweetNo">#33B5E5</color>
 </resources>

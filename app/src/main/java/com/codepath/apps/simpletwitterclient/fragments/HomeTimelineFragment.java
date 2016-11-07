@@ -29,6 +29,8 @@ public class HomeTimelineFragment extends TweetListFragment {
 
     private TwitterClient client;
     boolean scrolltobegin = false;
+    boolean loading = false;
+    boolean lastenryReached = false;
     ProgressBar pbProgress;
 
     @Override
@@ -36,10 +38,18 @@ public class HomeTimelineFragment extends TweetListFragment {
         super.onCreate(savedInstanceState);
 
         client = TwitterApplication.getRestClient(); //singleton client
-        ArrayList dbTweets = (ArrayList) Tweet.recentItems();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+        super.onViewCreated(view, savedInstanceState);
         //get the progress bar
         pbProgress = (ProgressBar) getActivity().findViewById(R.id.toolbar)
                 .findViewById(R.id.pbProgressAction);
+		        
+		ArrayList dbTweets = (ArrayList) Tweet.recentItems();
+
         if (dbTweets == null || dbTweets.isEmpty()) {
             populateTimeline(1, 0);
         } else {
@@ -48,29 +58,40 @@ public class HomeTimelineFragment extends TweetListFragment {
 
     }
 
-
     //Send an API request to get the timeline json
     //Fill the view by creating the tweet object from the json
-    private boolean populateTimeline(final long since_id, long max_id) {
-        boolean status = true;
+    private void populateTimeline(final long since_id, long max_id) {
+        loading = false;
         if (client.isInternetAvailable()) {
+            loading = true;
             pbProgress.setVisibility(ProgressBar.VISIBLE);
             client.getHomeTimeline(since_id, max_id, new JsonHttpResponseHandler() {
                 //SUCCESS
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     Log.d("DEBUG", response.toString());
+                    ArrayList <Tweet> returnedTweets = Tweet.fromJSONArray(response);
+                    //If returned is less than the requested number, then we assume
+                    //we've reached end of list
+                    if (returnedTweets.size() < TwitterClient.REQUEST_NUM_TWEETS - 1) {
+                        lastenryReached = true;
+                    } else {
+                        lastenryReached = false;
+                    }
+
                     if (since_id == 1) {
                         // Delete a whole table
                         Delete.table(Tweet.class);
-                        addAll(Tweet.fromJSONArray(response), true);
+                    	addAll(returnedTweets, true);
                     } else {
-                        addAll(Tweet.fromJSONArray(response), false);
+                    	addAll(returnedTweets, false);
                     }
                     // Now we call setRefreshing(false) to signal refresh has finished
                     swipeContainer.setRefreshing(false);
                     //Remove progressbar after network call completion
                     pbProgress.setVisibility(View.GONE);
+                    //we are not loading anymore
+                    loading = false;
                 }
 
                 //FAILURE
@@ -81,6 +102,8 @@ public class HomeTimelineFragment extends TweetListFragment {
                     swipeContainer.setRefreshing(false);
                     //Remove progressbar after network call completion
                     pbProgress.setVisibility(View.GONE);
+                    //we are not loading anymore
+                    loading = false;
                 }
 
                 @Override
@@ -90,10 +113,11 @@ public class HomeTimelineFragment extends TweetListFragment {
                     swipeContainer.setRefreshing(false);
                     //Remove progressbar after network call completion
                     pbProgress.setVisibility(View.GONE);
+                    //we are not loading anymore
+                    loading = false;
                 }
             });
         }
-        return status;
     }
 
     @Override
@@ -109,38 +133,46 @@ public class HomeTimelineFragment extends TweetListFragment {
         //  --> Deserialize and construct new model objects from the API response
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()
-        Log.d("DEBUG", "offset is " + offset);
-        long id = tweets.get(tweets.size() - 1).getUid();
-        Log.d("DEBUG", "tweests size is " + tweets.size() + " and uid of last is " + id);
-        //populateTimeline((offset * TwitterClient.NUM_TWEETS_LOADED) + 1);
-        return populateTimeline(0, id);
+        if (!loading && !lastenryReached) {
+            Log.d("DEBUG", "offset is " + offset);
+            long id = tweets.get(tweets.size() - 1).getUid();
+            Log.d("DEBUG", "LOADING Hometimeline tweets size is " + tweets.size() + " and uid of last is " + id);
+            //populateTimeline((offset * TwitterClient.NUM_TWEETS_LOADED) + 1);
+            populateTimeline(0, id);
+        } else {
+            Log.d("DEBUG", "NOT LOADING Hometimeline tweets size is " + tweets.size());
+        }
+        return loading;
     }
 
     @Override
     public void postTweet(String tweetStr) {
-         client.postTweet(tweetStr, new JsonHttpResponseHandler(){
-         //SUCCESS
-         @Override
-         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+         if (client.isInternetAvailable()) {
+             client.postTweet(tweetStr, new JsonHttpResponseHandler() {
+                 //SUCCESS
+                 @Override
+                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-         //deserialize JSON, create models, load the data into listview
-         try {
-             Tweet postedTweet = Tweet.fromJSON(response);
-             tweets.add(0, postedTweet);
-             aTweets.notifyItemInserted(0);
-             scrolltobegin = true;
-            Log.d("DEBUG", response.toString());
-         } catch (JSONException e) {
-         e.printStackTrace();
-         }
+                     //deserialize JSON, create models, load the data into listview
+                     try {
+                         Tweet postedTweet = Tweet.fromJSON(response);
+                         tweets.add(0, postedTweet);
+                         aTweets.notifyItemInserted(0);
+                         scrolltobegin = true;
+                         Log.d("DEBUG", response.toString());
+                     } catch (JSONException e) {
+                         e.printStackTrace();
+                     }
+                 }
+
+                 //FAILURE
+                 @Override
+                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                     Log.d("DEBUG", errorResponse.toString());
+                 }
+             });
          }
 
-         //FAILURE
-         @Override
-         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-         Log.d("DEBUG", errorResponse.toString());
-         }
-         });
     }
 
     @Override
@@ -151,5 +183,54 @@ public class HomeTimelineFragment extends TweetListFragment {
             scrolltobegin = false;
         }
     }
+
+    @Override
+    public void postTweetFavorite(Tweet tweet, final int position) {
+        if (client.isInternetAvailable()) {
+            client.postStatusFavorite(!tweet.isFavourited(), tweet.getUid(),
+                    new JsonHttpResponseHandler () {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            //onSuccess update tweet
+                            try {
+                                Tweet postedTweet = Tweet.fromJSON(response);
+                                tweets.set(position, postedTweet);
+                                aTweets.notifyItemChanged(position);
+                                Log.d("DEBUG", response.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        //FAILURE
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers,
+                                              Throwable throwable, JSONObject errorResponse) {
+                            Log.d("DEBUG", errorResponse.toString());
+                        }
+                    }
+            );
+        }
+    }
+
+    @Override
+    public void postRetweet (Long Id) {
+        if (client.isInternetAvailable()) {
+            client.postRetweet(Id, new JsonHttpResponseHandler () {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            //onSuccess update tweet
+                            populateTimeline(1, 0);
+                        }
+                        //FAILURE
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers,
+                                              Throwable throwable, JSONObject errorResponse) {
+                            Log.d("DEBUG", errorResponse.toString());
+                        }
+                    }
+            );
+        }
+    }
+
 
 }

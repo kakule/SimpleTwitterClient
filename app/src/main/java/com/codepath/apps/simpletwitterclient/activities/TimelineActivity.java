@@ -134,14 +134,18 @@ public class TimelineActivity extends AppCompatActivity implements
     }
 
     public void onComposeAction (View v) {
+        startComposeFragment("");
+    }
+
+    public void startComposeFragment(String screename) {
         if (client.isInternetAvailable()) {
             FragmentManager fm = getSupportFragmentManager();
             ComposeDialogFragment composeFrag = ComposeDialogFragment
-                    .newInstance(me.getProfileImageUrl());
+                    .newInstance(me.getProfileImageUrl(),
+                                 screename);
             composeFrag.show(fm, "composefragment");
         }
     }
-
     @Override
     public void onFinishDialog(String inputText) {
         HomeTimelineFragment currentTimeline = (HomeTimelineFragment) getSupportFragmentManager()
@@ -160,6 +164,8 @@ public class TimelineActivity extends AppCompatActivity implements
             Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
             i.putExtra("user", Parcels.wrap(user));
             startActivity(i);
+        } else if (type == RecycleTweetsAdapter.REPLY_VIEW) {
+            startComposeFragment(user.getScreenName());
         }
     }
 
