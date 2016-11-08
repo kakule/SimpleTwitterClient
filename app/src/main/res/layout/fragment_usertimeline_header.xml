@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@android:color/holo_blue_bright">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:srcCompat="@mipmap/ic_twitter_blue"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/ivUserDetailPic" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/ivUserDetailPic"
+        android:layout_toEndOf="@+id/ivUserDetailPic"
+        android:id="@+id/tvUserDetailName"
+        android:layout_marginTop="5dp"
+        android:textSize="20dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvUserDetailName"
+        android:layout_toRightOf="@+id/ivUserDetailPic"
+        android:layout_toEndOf="@+id/ivUserDetailPic"
+        android:layout_marginTop="5dp"
+        android:id="@+id/tvUserDetailTagline"
+        android:textSize="15dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvfollowersCount"
+        android:layout_below="@+id/ivUserDetailPic"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvfollowingCount"
+        android:layout_alignStart="@+id/tvfollowersCount"
+        android:layout_alignLeft="@+id/tvfollowersCount"
+        android:layout_below="@+id/tvfollowersCount"
+        android:layout_marginBottom="5dp"/>
+
+</RelativeLayout>

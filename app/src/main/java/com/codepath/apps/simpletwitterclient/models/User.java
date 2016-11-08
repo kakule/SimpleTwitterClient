@@ -25,6 +25,15 @@ public class User extends BaseModel{
     String screenName;
     @Column
     String profileImageUrl;
+    @Column
+    String tagLine;
+
+    @Column
+    int followersCount;
+
+    @Column
+    int friendsCount;
+
 
     public User() {
         super();
@@ -38,6 +47,9 @@ public class User extends BaseModel{
             u.uid = json.getLong("id");
             u.screenName = json.getString("screen_name");
             u.profileImageUrl = json.getString("profile_image_url");
+            u.tagLine = json.getString("description");
+            u.followersCount = json.getInt("followers_count");
+            u.friendsCount = json.getInt("friends_count");
             //save to db
             u.save();
         } catch (JSONException e) {
@@ -67,6 +79,18 @@ public class User extends BaseModel{
         return profileImageUrl;
     }
 
+    public String getTagLine() {
+        return tagLine;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public int getFriendsCount() {
+        return friendsCount;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -81,5 +105,17 @@ public class User extends BaseModel{
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public void setFriendsCount(int followingsCount) {
+        this.friendsCount = followingsCount;
     }
 }

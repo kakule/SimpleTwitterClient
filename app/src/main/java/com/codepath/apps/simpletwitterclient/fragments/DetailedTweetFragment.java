@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletwitterclient.activities;
+package com.codepath.apps.simpletwitterclient.fragments;
 
 import android.graphics.Point;
 import android.os.Bundle;

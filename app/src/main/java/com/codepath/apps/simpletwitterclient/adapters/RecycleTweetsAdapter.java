@@ -9,14 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.View.LinkifiedTextView;
+import com.codepath.apps.simpletwitterclient.View.PatternEditableBuilder;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -27,16 +30,26 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class RecycleTweetsAdapter extends
         RecyclerView.Adapter<RecycleTweetsAdapter.ViewHolder> {
 
+    public static int DETAIL_VIEW   = 0;
+    public static int PROFILE_VIEW  = 1;
+    public static int REPLY_VIEW    = 2;
+    public static int FAVORITE_VIEW = 3;
+    public static int RETWEET_VIEW  = 4;
+    public static int SCREENNAME_TEXT = 5;
+
     // Define listener member variable
     private OnItemClickListener listener;
     // Define the listener interface
     public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
+        void onItemClick(View itemView, int position, int id);
+        void onItemClick(View itemView, int position, int id, String str);
     }
+
     // Define the method that allows the parent activity or fragment to define the listener
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProfileImage;
@@ -46,9 +59,14 @@ public class RecycleTweetsAdapter extends
         LinkifiedTextView tvBody;
         ImageView ivtweetPic;
         VideoView video_player_view;
+        ImageView ivReply;
+        ImageView ivFavorite;
+        ImageView ivRetweet;
+
+        TextView tvRetweetNumber;
         private Context context;
 
-        public ViewHolder(Context context, final View itemView) {
+        public ViewHolder(final Context context, final View itemView) {
             super(itemView);
 
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
@@ -58,8 +76,13 @@ public class RecycleTweetsAdapter extends
             tvBody = (LinkifiedTextView) itemView.findViewById(R.id.tvBody);
             ivtweetPic = (ImageView) itemView.findViewById(R.id.ivTweetPic);
             video_player_view = (VideoView) itemView.findViewById(R.id.video_view);
+            ivReply = (ImageView) itemView.findViewById(R.id.ivReply);
+            ivFavorite = (ImageView) itemView.findViewById(R.id.ivFavorite);
+            ivRetweet = (ImageView) itemView.findViewById(R.id.ivRetweet);
+            tvRetweetNumber = (TextView) itemView.findViewById(R.id.tvretweetNumber);
             this.context = context;
-            // Setup the click listener
+
+            // Setup the click listener for detail view
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -67,11 +90,68 @@ public class RecycleTweetsAdapter extends
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(itemView, position);
+                            listener.onItemClick(itemView, position, DETAIL_VIEW);
                         }
                     }
                 }
             });
+
+            //Setup the click listener for profile pic
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, PROFILE_VIEW);
+                        }
+                    }
+                }
+            });
+
+            //Setup the click listener for reply button
+            ivReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, REPLY_VIEW);
+                        }
+                    }
+                }
+            });
+
+            //Setup the click listener for reply button
+            ivFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, FAVORITE_VIEW);
+                        }
+                    }
+                }
+            });
+
+            //Setup the click listener for reply button
+            ivRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position, RETWEET_VIEW);
+                        }
+                    }
+                }
+            });
+
         }
 
         public ImageView getIvProfileImage() {
@@ -96,6 +176,17 @@ public class RecycleTweetsAdapter extends
 
         public ImageView getIvtweetPic() {
             return ivtweetPic;
+        }
+
+        public ImageView getIvFavorite() {
+            return ivFavorite;
+        }
+        public TextView getTvRetweetNumber() {
+            return tvRetweetNumber;
+        }
+
+        public ImageView getIvRetweet() {
+            return ivRetweet;
         }
 
         public VideoView getVideo_player_view() {
@@ -136,7 +227,7 @@ public class RecycleTweetsAdapter extends
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(RecycleTweetsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecycleTweetsAdapter.ViewHolder viewHolder, final int position) {
         // Get the data model based on position
         Tweet tweet = mTweets.get(position);
         // Set item views based on your views and data model
@@ -144,8 +235,11 @@ public class RecycleTweetsAdapter extends
         TextView tvUserName = viewHolder.getTvUserName();
         TextView tvScreenName = viewHolder.getTvScreenName();
         TextView tvrelativeTime = viewHolder.getTvrelativeTime();
-        LinkifiedTextView tvBody =  viewHolder.getTvBody();
+        final LinkifiedTextView tvBody =  viewHolder.getTvBody();
         ImageView ivtweetPic = viewHolder.getIvtweetPic();
+        ImageView ivfavorite = viewHolder.getIvFavorite();
+        ImageView ivretweet = viewHolder.getIvRetweet();
+        TextView tvretweetNumber = viewHolder.getTvRetweetNumber();
         final VideoView vid_view = viewHolder.getVideo_player_view();
 
         //populate the data into the subviews
@@ -156,6 +250,36 @@ public class RecycleTweetsAdapter extends
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent);//clear out the old image
         ivtweetPic.setImageResource(android.R.color.transparent);//clear out the old image
+        ivfavorite.setImageResource(android.R.color.transparent);//clear out the old image
+        ivretweet.setImageResource(android.R.color.transparent);//clear out the old image
+        tvretweetNumber.setText(""); //reset
+
+        //Clickable #hashtags and screen_names
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"),getContext()
+                        .getResources().getColor(R.color.retweetNo),
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                //Toast.makeText(getContext(), "Clicked username: " + text,
+                                //        Toast.LENGTH_SHORT).show();
+                                // Triggers click upwards to the adapter on click
+                                if (listener != null) {
+                                    if (position != RecyclerView.NO_POSITION) {
+                                        listener.onItemClick(tvBody, position, SCREENNAME_TEXT, text.substring(1));
+                                    }
+                                }
+                            }
+                        }).
+                addPattern(Pattern.compile("\\#(\\w+)"), getContext()
+                        .getResources().getColor(R.color.retweetNo),
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                Toast.makeText(getContext(), "Clicked hashtag: " + text,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }).into(tvBody);
 
         Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 3, 3))
@@ -180,6 +304,26 @@ public class RecycleTweetsAdapter extends
         } else {
             // Hide the controller
             vid_view.setVisibility(View.GONE);
+        }
+
+        if (tweet.isFavourited()) {
+            ivfavorite.setImageResource(R.drawable.ic_favorite_yes);
+        } else {
+            ivfavorite.setImageResource(R.drawable.ic_favorite);
+        }
+
+        if (tweet.isRetweeted()) {
+            ivretweet.setImageResource(R.drawable.ic_retweet_yes);
+            tvretweetNumber.setTextColor(getContext()
+                    .getResources().getColor(R.color.retweetYes));
+        } else {
+            ivretweet.setImageResource(R.drawable.ic_retweet);
+            tvretweetNumber.setTextColor(getContext()
+                    .getResources().getColor(R.color.retweetNo));
+        }
+
+        if (tweet.getRetweetCount() > 0) {
+            tvretweetNumber.setText(Integer.toString(tweet.getRetweetCount()));
         }
     }
 
