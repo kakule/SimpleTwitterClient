@@ -9,14 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.View.LinkifiedTextView;
+import com.codepath.apps.simpletwitterclient.View.PatternEditableBuilder;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -61,7 +64,7 @@ public class RecycleTweetsAdapter extends
         TextView tvRetweetNumber;
         private Context context;
 
-        public ViewHolder(Context context, final View itemView) {
+        public ViewHolder(final Context context, final View itemView) {
             super(itemView);
 
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
@@ -248,6 +251,28 @@ public class RecycleTweetsAdapter extends
         ivfavorite.setImageResource(android.R.color.transparent);//clear out the old image
         ivretweet.setImageResource(android.R.color.transparent);//clear out the old image
         tvretweetNumber.setText(""); //reset
+
+        //Clickable #hashtags and screen_names
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"),getContext()
+                        .getResources().getColor(R.color.retweetNo),
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                Toast.makeText(getContext(), "Clicked username: " + text,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }).
+                addPattern(Pattern.compile("\\#(\\w+)"), getContext()
+                        .getResources().getColor(R.color.retweetNo),
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                Toast.makeText(getContext(), "Clicked hashtag: " + text,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }).into(tvBody);
+
         Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl())
                 .bitmapTransform(new RoundedCornersTransformation(getContext(), 3, 3))
                 .into(ivProfileImage);

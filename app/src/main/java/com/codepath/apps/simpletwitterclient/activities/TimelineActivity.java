@@ -54,9 +54,11 @@ public class TimelineActivity extends AppCompatActivity implements
     View.OnClickListener onProfileView = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
-            i.putExtra("user", Parcels.wrap(me));
-            startActivity(i);
+            if (client.isInternetAvailable()) {
+                Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
+                i.putExtra("user", Parcels.wrap(me));
+                startActivity(i);
+            }
         }
     };
 
@@ -83,7 +85,7 @@ public class TimelineActivity extends AppCompatActivity implements
         // find the floating action button
         fb = (FloatingActionButton) findViewById(R.id.fbCompose);
         // get the user details
-        getUserDetails();
+        getSelfDetails();
         //check if intent was received
         getImplicitIntent();
     }
@@ -108,7 +110,7 @@ public class TimelineActivity extends AppCompatActivity implements
     }
 
 
-    public void getUserDetails() {
+    public void getSelfDetails() {
         if (client.isInternetAvailable()) {
             client.getAuthorisedUser(new JsonHttpResponseHandler() {
                 //SUCCESS
@@ -148,11 +150,18 @@ public class TimelineActivity extends AppCompatActivity implements
     }
     @Override
     public void onFinishDialog(String inputText) {
-        HomeTimelineFragment currentTimeline = (HomeTimelineFragment) getSupportFragmentManager()
+        HomeTimelineFragment homeTimeline = (HomeTimelineFragment) getSupportFragmentManager()
                 .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" +
-                vpPager.getCurrentItem());
-        if (vpPager.getCurrentItem() == 0 && currentTimeline != null) {
-            currentTimeline.postTweet(inputText);
+                        "0");
+        Fragment currentTimeline = getSupportFragmentManager()
+                .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" +
+                        vpPager.getCurrentItem());
+
+        if (currentTimeline != null) {
+            if (!(currentTimeline instanceof HomeTimelineFragment)) {
+                vpPager.setCurrentItem(0);
+            }
+            homeTimeline.postTweet(inputText);
         }
     }
 
