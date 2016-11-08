@@ -35,12 +35,14 @@ public class RecycleTweetsAdapter extends
     public static int REPLY_VIEW    = 2;
     public static int FAVORITE_VIEW = 3;
     public static int RETWEET_VIEW  = 4;
+    public static int SCREENNAME_TEXT = 5;
 
     // Define listener member variable
     private OnItemClickListener listener;
     // Define the listener interface
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position, int id);
+        void onItemClick(View itemView, int position, int id, String str);
     }
 
     // Define the method that allows the parent activity or fragment to define the listener
@@ -225,7 +227,7 @@ public class RecycleTweetsAdapter extends
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(RecycleTweetsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecycleTweetsAdapter.ViewHolder viewHolder, final int position) {
         // Get the data model based on position
         Tweet tweet = mTweets.get(position);
         // Set item views based on your views and data model
@@ -233,7 +235,7 @@ public class RecycleTweetsAdapter extends
         TextView tvUserName = viewHolder.getTvUserName();
         TextView tvScreenName = viewHolder.getTvScreenName();
         TextView tvrelativeTime = viewHolder.getTvrelativeTime();
-        LinkifiedTextView tvBody =  viewHolder.getTvBody();
+        final LinkifiedTextView tvBody =  viewHolder.getTvBody();
         ImageView ivtweetPic = viewHolder.getIvtweetPic();
         ImageView ivfavorite = viewHolder.getIvFavorite();
         ImageView ivretweet = viewHolder.getIvRetweet();
@@ -259,8 +261,14 @@ public class RecycleTweetsAdapter extends
                         new PatternEditableBuilder.SpannableClickedListener() {
                             @Override
                             public void onSpanClicked(String text) {
-                                Toast.makeText(getContext(), "Clicked username: " + text,
-                                        Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), "Clicked username: " + text,
+                                //        Toast.LENGTH_SHORT).show();
+                                // Triggers click upwards to the adapter on click
+                                if (listener != null) {
+                                    if (position != RecyclerView.NO_POSITION) {
+                                        listener.onItemClick(tvBody, position, SCREENNAME_TEXT, text.substring(1));
+                                    }
+                                }
                             }
                         }).
                 addPattern(Pattern.compile("\\#(\\w+)"), getContext()

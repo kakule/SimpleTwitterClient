@@ -37,6 +37,7 @@ public class TimelineActivity extends AppCompatActivity implements
         ComposeDialogFragment.PostTweetDialogListener,
         TweetListFragment.TimelineListener {
     private User me;
+    private User otherUser;
     TwitterClient client;
     Toolbar toolBar;
     FloatingActionButton fb;
@@ -135,6 +136,30 @@ public class TimelineActivity extends AppCompatActivity implements
         }
     }
 
+    public void getUserDetails(String screen_name) {
+        if (client.isInternetAvailable()) {
+            client.getUserDetails(screen_name, new JsonHttpResponseHandler() {
+                //SUCCESS
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("DEBUG", response.toString());
+                    //deserialize JSON, create models, load the data into listview
+                    //Start intent with user details
+                    Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
+                    i.putExtra("user", Parcels.wrap(User.fromJSON(response)));
+                    startActivity(i);
+                }
+
+                //FAILURE
+                @Override
+                public void onFailure(int statusCode, Header[] headers,
+                                      Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        }
+    }
+
     public void onComposeAction (View v) {
         startComposeFragment("");
     }
@@ -175,6 +200,8 @@ public class TimelineActivity extends AppCompatActivity implements
             startActivity(i);
         } else if (type == RecycleTweetsAdapter.REPLY_VIEW) {
             startComposeFragment(user.getScreenName());
+        } else if (type == RecycleTweetsAdapter.SCREENNAME_TEXT) {
+            getUserDetails(user.getScreenName());
         }
     }
 

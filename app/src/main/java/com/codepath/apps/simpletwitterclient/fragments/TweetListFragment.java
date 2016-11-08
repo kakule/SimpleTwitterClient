@@ -98,6 +98,16 @@ public class TweetListFragment extends Fragment {
                     detailFrag.show(fm, "detailfragment");
                 }
             }
+
+            @Override
+            public void onItemClick(View itemView, int position, int type, String str) {
+                if(type == RecycleTweetsAdapter.SCREENNAME_TEXT) {
+                    //Toast.makeText(getActivity(), "Screen name text clicked " + str, Toast.LENGTH_SHORT).show();
+                    User s = new User();
+                    s.setScreenName(str);
+                    sendRequestToActivity (s, type);
+                }
+            }
         });
     }
 
